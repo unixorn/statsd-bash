@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+# Write a metric to statsd port. We default to localhost.
+
+
+STATSD_HOST="${STATSD_HOST:-localhost}"
+STATSD_PORT="${STATSD_PORT:-8125}"
+METRIC_TYPE="${METRIC_TYPE:-g}"
+
+
+if [[ "$(uname)" != "Linux" ]]; then
+  echo "$(basename $0) only works on Linux, bailing."
+  exit 1
+fi
+
+if [[ $# != 2 ]]; then
+  # shellcheck disable=SC2086
+  echo "Usage: $(basename $0) metricName metricValue"
+  exit 1
+fi
+
+if [[ -n "$DEBUG" ]]; then
+  echo "DEBUG writing ${1}:${2}|${METRIC_TYPE} to ${STATSD_HOST}:${STATSD_PORT}"
+fi
+echo -n "${1}:${2}|${METRIC_TYPE}" > "/dev/udp/${STATSD_HOST}/${STATSD_PORT}"
