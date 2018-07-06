@@ -2,13 +2,12 @@
 #
 # Write a metric to statsd port. We default to localhost.
 
-
 STATSD_HOST="${STATSD_HOST:-localhost}"
 STATSD_PORT="${STATSD_PORT:-8125}"
 METRIC_TYPE="${METRIC_TYPE:-g}"
 
-
 if [[ "$(uname)" != "Linux" ]]; then
+  # shellcheck disable=SC2086
   echo "$(basename $0) only works on Linux, bailing."
   exit 1
 fi
